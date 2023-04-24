@@ -1,88 +1,98 @@
 import { LitElement, html, css } from 'lit';
+import "@lrnwebcomponents/simple-icon/simple-icon.js";
+import "@lrnwebcomponents/simple-icon/lib/simple-icons.js";
+import "@lrnwebcomponents/simple-icon/lib/simple-icon-button.js";
+import "@lrnwebcomponents/simple-colors/simple-colors.js";
 
 const logo = new URL('../assets/open-wc-logo.svg', import.meta.url).href;
 
 class Project3 extends LitElement {
-  static properties = {
-    header: { type: String },
+  static get properties(){
+    return{
+      source: { type: String, reflect: true},
+      icon: { type: String},
+      playing: { type: Boolean, reflect: true},
+    }
   }
 
   static styles = css`
-    :host {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+    .container {
+      display: inline-flex;
       align-items: center;
-      justify-content: flex-start;
-      font-size: calc(10px + 2vmin);
-      color: #1a2b42;
-      max-width: 960px;
-      margin: 0 auto;
-      text-align: center;
-      background-color: var(--project-3-background-color);
-    }
-
-    main {
-      flex-grow: 1;
-    }
-
-    .logo {
-      margin-top: 36px;
-      animation: app-logo-spin infinite 20s linear;
-    }
-
-    @keyframes app-logo-spin {
-      from {
-        transform: rotate(0deg);
-      }
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    .app-footer {
-      font-size: calc(12px + 0.5vmin);
-      align-items: center;
-    }
-
-    .app-footer a {
-      margin-left: 5px;
+      border-radius: 4px;
+      padding-right: 6px;
+      border: 4px;
+      background: var(--simple-colors-default-theme-grey-3);
     }
   `;
 
   constructor() {
     super();
-    this.header = 'My app';
+    this.source = '';
+    this.icon = "av:play-arrow";
+    this.playing = false;
   }
+
+  audioLoad(source) {
+    const audioFile = this.shadowRoot.querySelector('.player');
+    audioFile.src = source;
+    audioFile.load();
+  }
+
+  handleProgress(){
+    if(this.shadowRoot.querySelector(".player").ended){
+      this.audioController(false);
+    }
+    if(!this.shadowRoot.querySelector(".player").paused){
+      var audioDuration = this.shadowRoot.querySelector(".player").duration;
+      var audioCurrentTime = this.shadowRoot.querySelector(".player").currentTime;
+      var progressPercentage = (audioCurrentTime / audioDuration)*100;
+      this.shadowRoot.querySelector(".container").style.background = `linear-gradient(90deg, var(--simple-colors-default-theme-accent-3) 0% ${progressPercentage}%, var(--simple-colors-default-theme-grey-3) ${progressPercentage}% 100%)`;
+    }
+  }
+
+
+  audioController(playState){
+    const audio = this.shadowRoot.querySelector('.player');
+    if(playState){
+      audio.play();
+      this.playing = true;
+      this.icon = "av:pause";
+    }
+    else{
+      audio.pause();
+      this.playing = false;
+      this.icon = "av:play-arrow";
+    }
+  }
+
+  handleClickEvent(){
+    const audio = this.shadowRoot.querySelector('.player');
+    if(!audio.hasAttribute("src")){
+      this.audioLoad(this.source);
+    } 
+
+    if(audio.paused){
+        this.audioController(true);
+      }
+    else{
+        this.audioController(false);
+      }
+  }
+
 
   render() {
     return html`
-      <main>
-        <div class="logo"><img alt="open-wc logo" src=${logo} /></div>
-        <h1>${this.header}</h1>
-
-        <p>Edit <code>src/Project3.js</code> and save to reload.</p>
-        <a
-          class="app-link"
-          href="https://open-wc.org/guides/developing-components/code-examples/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Code examples
-        </a>
-      </main>
-
-      <p class="app-footer">
-        🚽 Made with love by
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://github.com/open-wc"
-          >open-wc</a
-        >.
-      </p>
+      <simple-colors accent-color="blue">
+        <div class="container" @click="${this.handleClickEvent}"> 
+          <simple-icon-button class="icon" icon="${this.icon}" ></simple-icon-button>
+          <slot></slot>
+          <audio class="player" @timeupdate="${this.handleProgress}"></audio>
+        </div>
+      </simple-colors>
     `;
   }
 }
+
 
 customElements.define('project-3', Project3);
