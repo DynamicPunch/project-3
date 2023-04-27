@@ -41,7 +41,7 @@ class Project3 extends SimpleColors {
     }
     if(!this.shadowRoot.querySelector(".player").paused){
       var duration = this.shadowRoot.querySelector(".player").duration;
-      var watchTime = this.shadowRoot.querySelector(".player").currentTime;
+      var watchTime = this.shadowRoot.querySelector(".player").currentTime + .2;
       var percentage = Math.ceil((watchTime/duration)*100);
       this.shadowRoot.querySelector(".container").style.background = `linear-gradient(90deg, var(--simple-colors-default-theme-accent-3) 0% ${percentage}%, var(--simple-colors-default-theme-grey-3) ${percentage}% 100%)`;
     }
