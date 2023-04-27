@@ -11,7 +11,6 @@ class Project3 extends LitElement {
     return{
       source: { type: String, reflect: true},
       icon: { type: String},
-      playing: { type: Boolean, reflect: true},
     }
   }
 
@@ -30,7 +29,6 @@ class Project3 extends LitElement {
     super();
     this.source = '';
     this.icon = "av:play-arrow";
-    this.playing = false;
   }
 
   audioLoad(source) {
@@ -44,25 +42,10 @@ class Project3 extends LitElement {
       this.audioController(false);
     }
     if(!this.shadowRoot.querySelector(".player").paused){
-      var audioDuration = this.shadowRoot.querySelector(".player").duration;
-      var audioCurrentTime = this.shadowRoot.querySelector(".player").currentTime;
-      var progressPercentage = (audioCurrentTime / audioDuration)*100;
-      this.shadowRoot.querySelector(".container").style.background = `linear-gradient(90deg, var(--simple-colors-default-theme-accent-3) 0% ${progressPercentage}%, var(--simple-colors-default-theme-grey-3) ${progressPercentage}% 100%)`;
-    }
-  }
-
-
-  audioController(playState){
-    const audio = this.shadowRoot.querySelector('.player');
-    if(playState){
-      audio.play();
-      this.playing = true;
-      this.icon = "av:pause";
-    }
-    else{
-      audio.pause();
-      this.playing = false;
-      this.icon = "av:play-arrow";
+      var duration = this.shadowRoot.querySelector(".player").duration;
+      var watchTime = this.shadowRoot.querySelector(".player").currentTime;
+      var percentage = (watchTime/duration)*100;
+      this.shadowRoot.querySelector(".container").style.background = `linear-gradient(90deg, var(--simple-colors-default-theme-accent-3) 0% ${percentage}%, var(--simple-colors-default-theme-grey-3) ${percentage}% 100%)`;
     }
   }
 
@@ -71,7 +54,6 @@ class Project3 extends LitElement {
     if(!audio.hasAttribute("src")){
       this.audioLoad(this.source);
     } 
-
     if(audio.paused){
         this.audioController(true);
       }
@@ -80,6 +62,17 @@ class Project3 extends LitElement {
       }
   }
 
+  audioController(playState){
+    const audio = this.shadowRoot.querySelector('.player');
+    if(playState){
+      audio.play();
+      this.icon = "av:pause";
+    }
+    else{
+      audio.pause();
+      this.icon = "av:play-arrow";
+    }
+  }
 
   render() {
     return html`
@@ -93,6 +86,5 @@ class Project3 extends LitElement {
     `;
   }
 }
-
 
 customElements.define('project-3', Project3);
