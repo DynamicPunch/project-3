@@ -26,6 +26,9 @@ class Project3 extends SimpleColors {
       border: 4px;
       background: var(--simple-colors-default-theme-grey-3);
     }
+    .hide {
+      visibility: hidden;
+    }
   `];
 }
 
@@ -65,7 +68,7 @@ class Project3 extends SimpleColors {
         <div class="container" @click="${this.handleClickEvent}"> 
           <simple-icon-button class="icon" icon="${this.icon}" ></simple-icon-button>
           <slot></slot>
-          <audio src="${this.source}" class="player" @timeupdate="${this.handleProgress}"></audio>
+          <audio class = "hide" src="${this.source}" class="player" @timeupdate="${this.handleProgress}"></audio>
         </div>
     `;
   }
