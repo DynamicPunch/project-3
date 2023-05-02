@@ -22,11 +22,15 @@ class Project3 extends SimpleColors {
       display: inline-flex;
       align-items: center;
       border-radius: 4px;
-      padding-right: 6px;
-      border: 4px;
+      padding-right: 8px;
+      padding-top: 1px;
+      padding-bottom: 3px;
       background: var(--simple-colors-default-theme-grey-3);
+      font-family: "Turnip RE",Georgia,"Times New Roman",Times,serif;
+      font-size: inherit;
+      color: #222;
     }
-    .hide {
+    .player {
       visibility: hidden;
     }
   `];
@@ -68,7 +72,7 @@ class Project3 extends SimpleColors {
         <div class="container" @click="${this.handleClickEvent}"> 
           <simple-icon-button class="icon" icon="${this.icon}" ></simple-icon-button>
           <slot></slot>
-          <audio class = "hide" src="${this.source}" class="player" @timeupdate="${this.handleProgress}"></audio>
+          <audio src="${this.source}" class="player" @timeupdate="${this.handleProgress}"></audio>
         </div>
     `;
   }
